@@ -1,0 +1,61 @@
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'css/admindashboard.css' %}">
+</head>
+<body>
+    <div class="header">
+        <h1 class="gold-text">Admin Dashboard</h1>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="gold-text">Teacher</h2>
+                    </div>
+                    <div class="card-body">
+                        <a href="/View_Teacher"><button type="button" class="btn btn-gold">View Teacher</button></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="gold-text">Time Table</h2>
+                    </div>
+                    <div class="card-body">
+                        <a href="/Time_Table"><button type="button" class="btn btn-gold">View Time Table</button></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="gold-text">Location</h2>
+                    </div>
+                    <div class="card-body">
+                        <a href="/Location"><button type="button" class="btn btn-gold">View Location</button></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="gold-text">Attendance</h2>
+                    </div>
+                    <div class="card-body">
+                        <button type="button" class="btn btn-gold">View Attendance</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
