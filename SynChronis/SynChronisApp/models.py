@@ -44,14 +44,14 @@ class AttendanceTable(models.Model):
 
 class ClassTable(models.Model):
     TEACHER = models.ForeignKey(TeacherTable, on_delete=models.CASCADE)
-    class_name = models.CharField(max_length=50, null=True, blank=True)
-    latitude = models.CharField(max_length=50, null=True, blank=True)
-    longitude = models.CharField(max_length=50, null=True, blank=True)
+    Class_name = models.CharField(max_length=50, null=True, blank=True)
+    Latitude = models.CharField(max_length=50, null=True, blank=True)
+    Longitude = models.CharField(max_length=50, null=True, blank=True)
     Location_name = models.CharField(max_length=50, null=True, blank=True)
     Department = models.CharField(max_length=50, null=True, blank=True)
     Year = models.CharField(max_length=50, null=True, blank=True)
 
-class TimeTable(models.Model):
+class TimeTableTable(models.Model):
     Class_name = models.ForeignKey(ClassTable, on_delete=models.CASCADE)
     Period = models.CharField(max_length=50, null=True, blank=True)
     Subject = models.CharField(max_length=50, null=True, blank=True)
@@ -63,4 +63,10 @@ class LocationTable(models.Model):
     latitude = models.CharField(max_length=50, null=True, blank=True)
     longitude = models.CharField(max_length=50, null=True, blank=True)
     Location_name = models.CharField(max_length=50, null=True, blank=True)
+    
+class SubjectTable(models.Model):
+    Subject_name = models.CharField(max_length=50, null=True, blank=True)
+    Teacher =models.ForeignKey(TeacherTable, on_delete=models.CASCADE)
+    Class_name = models.ForeignKey(ClassTable, on_delete=models.CASCADE)
+    Semester = models.CharField(max_length=50, null=True, blank=True)
     

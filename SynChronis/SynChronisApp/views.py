@@ -5,7 +5,7 @@ from django.views import View
 
 from SynChronisApp.form import LocationForm
 
-from .models import LoginTable, TeacherTable
+from .models import ClassTable, LoginTable, TeacherTable ,TimeTableTable
 
 # Create your views here.
 
@@ -51,7 +51,16 @@ class RejectTeacher(View):
     
 class TimeTable(View):
     def get(self, request):
-        return render(request, 'timetable.html')
+       
+        tt=TimeTableTable.objects.all()
+        return render(request, 'timetable.html',{'tt':tt})
+    
+
+class SettimeTable(View):
+    def get(self, request,day,period):
+        print(day,period)
+        tt=TimeTableTable.objects.all()
+        return render(request, 'settimetable.html',{'tt':tt,'day':day,'period':period})
     
 class MainPage(View):
     def get(self, request):
@@ -70,4 +79,7 @@ class Location(View):
             form.save()
             return HttpResponse('''<script>alert('location added successfully');window.location.href='/Location';</script>''')
        
+class SelectTime_Table(View):
+    def get(self, request):
+        return render(request, 'selecttimetable.html')
         

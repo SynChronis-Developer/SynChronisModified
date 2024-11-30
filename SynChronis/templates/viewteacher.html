@@ -28,14 +28,14 @@
           {% for i in te %}
           <tr>
             <td>{{i.id}}</td>
-            <td>{{i.name}}</td>
-            <td>{{i.subject}}</td>
-            <td>{{i.gender}}</td>
-            <td>{{i.department}}</td>
+            <td>{{i.Name}}</td>
+            <td>{{i.Subject}}</td>
+            <td>{{i.Gender}}</td>
+            <td>{{i.Department}}</td>
             {% comment %} <td>{{i.subject}}</td> {% endcomment %}
-            <td>{{i.phone_number}}</td>
-            <td>{{i.email}}</td>
-            <td>{{i.qualification}}</td>
+            <td>{{i.Phone_number}}</td>
+            <td>{{i.Email}}</td>
+            <td>{{i.Qualification}}</td>
             <td>{{i.LOGIN.status}}</td>
             <td>
             <a href= "/accept_teacher/{{i.id}}"><button class="verify-button" >Accept</button></a>

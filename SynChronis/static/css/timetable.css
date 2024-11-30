@@ -1,0 +1,66 @@
+/* Global Styles */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0; /* Light gray background */
+  color: #333; /* Dark gray text */
+}
+
+/* Container Styles */
+
+.container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: #fff; /* White background */
+  border: 1px solid #ddd; /* Light gray border */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Header Styles */
+
+h1 {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+/* Table Styles */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+th, td {
+  border: 1px solid #ddd; /* Light gray border */
+  padding: 10px;
+  text-align: left;
+}
+
+th {
+  background-color: #f5f5f5; /* Light gray background */
+  font-weight: bold;
+}
+
+/* Timetable Styles */
+
+.timetable {
+  margin-top: 20px;
+}
+
+.timetable th {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.timetable td {
+  font-size: 16px;
+}

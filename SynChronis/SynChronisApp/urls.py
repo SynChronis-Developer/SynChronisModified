@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.urls import  path
 
-from SynChronisApp.views import AcceptTeacher, AdminDashboard, Location, LoginPage, MainPage, RejectTeacher, TimeTable, ViewTeacher
+from .views import AcceptTeacher, AdminDashboard, Location, LoginPage, MainPage, RejectTeacher, SelectTime_Table, TimeTable, ViewTeacher,SettimeTable
 
 urlpatterns = [
     path('', MainPage.as_view(), name='Main_Page'),
@@ -27,4 +27,6 @@ urlpatterns = [
     path('Location/', Location.as_view(), name='Location'),
     path('accept_teacher/<int:id>', AcceptTeacher.as_view(), name='accept_teacher'),
     path('reject_teacher/<int:id>', RejectTeacher.as_view(), name='reject_teacher'),
+    path('SelectTime_Table/', SelectTime_Table.as_view(), name='SelectTime_Table'),
+    path('set_time_table/<str:day>/<str:period>', SettimeTable.as_view(), name='set_time_table'),
 ]
