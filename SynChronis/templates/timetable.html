@@ -1,75 +1,102 @@
 {% load static %}
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Timetable Manager</title>
+    <link rel="stylesheet" href="{% static 'css/timetable.css' %}">
 </head>
 <body>
     <form>
-      <select> 
-        <label class="aa">Select Class</label>
-        {% for i in tt %}
-        <option value="1">{{i.Class_name.Class_name}}</option>
-        {% endfor %}
-      </select>
-        <table>
-          <thead>
-            <tr>
-              <th>Day</th>
-              <th>Period 1</th></a>
-              <th>Period 2</th>
-              <th>Period 3</th>
-              <th>Period 4</th>
-              <th>Period 5</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Monday</td>
-              <td><a href="/set_time_table/<{{day}}/{{period}}>"><button type="button" >Period 1</button></td></a>
-              <td><button type="button" >Period 2</button></td>
-              <td><button type="button" >Period 3</button></td>
-              <td><button type="button" >Period 4</button></td>
-              <td><button type="button" >Period 5</button></td>
-            </tr>
-            <tr>
-              <td>Tuesday</td>
-              <td><button type="button" >Period 1</button></td>
-              <td><button type="button" >Period 2</button></td>
-              <td><button type="button" >Period 3</button></td>
-              <td><button type="button" >Period 4</button></td>
-              <td><button type="button" >Period 5</button></td>
-            </tr>
-            <tr>
-              <td>Wednesday</td>
-              <td><button type="button" >Period 1</button></td>
-              <td><button type="button" >Period 2</button></td>
-              <td><button type="button" >Period 3</button></td>
-              <td><button type="button" >Period 4</button></td>
-              <td><button type="button" >Period 5</button></td>
-            </tr>
-            <tr>
-              <td>Thursday</td>
-              <td><button type="button" >Period 1</button></td>
-              <td><button type="button" >Period 2</button></td>
-              <td><button type="button" >Period 3</button></td>
-              <td><button type="button" >Period 4</button></td>
-              <td><button type="button" >Period 5</button></td>
-            </tr>
-            <tr>
-              <td>Friday</td>
-              <td><button type="button" >Period 1</button></td>
-              <td><button type="button" >Period 2</button></td>
-              <td><button type="button" >Period 3</button></td>
-              <td><button type="button" >Period 4</button></td>
-              <td><button type="button" >Period 5</button></td>
-            </tr>
-            <tr>
-              <td>Saturday</td>
-              <td><button type="button" >Period 1</button></td>
-              <td><button type="button" >Period 2</button></td>
-            
-      
+        <h1 class="header">SET TIME-TABLE<h1>
+        <label for="select">Select Class</label>
+        <select id="select" ,name ="classname">
+            {% for i in tt %}
+            <option value="{{ i.Class_name.Class_name }}">{{ i.Class_name.Class_name }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="periods">Select Number of Periods</label>
+        <select id="periods">
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5" selected>5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+        </select>
+    </form>
+
+    <div class="container">
+        <div class="table-container center">
+            <table class="table" id="timetable">
+                <thead>
+                    <tr id="header-row">
+                        <th>Day</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const periodsSelect = document.getElementById('periods');
+        const classSelect = document.getElementById('select');
+        const tableHead = document.getElementById('header-row');
+        const tableBody = document.getElementById('table-body');
+
+        const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+        // Pass the base URL for the timetable page from Django template to JavaScript
+        const setTimeTableUrlTemplate = "{% url 'set_time_table' day='PLACEHOLDER_DAY' period='PLACEHOLDER_PERIOD' classname='PLACEHOLDER_CLASS' %}";
+
+        // Function to update the timetable table
+        function updateTable() {
+            const periods = parseInt(periodsSelect.value);
+            const selectedClass = classSelect.value;  // Get the selected class
+
+            // Update the table header
+            tableHead.innerHTML = '<th>Day</th>';
+            for (let i = 1; i <= periods; i++) {
+                tableHead.innerHTML += `<th>Period ${i}</th>`;
+            }
+
+            // Update table body
+            tableBody.innerHTML = '';
+            weekdays.forEach(day => {
+                let row = `<tr><td>${day}</td>`;
+                for (let i = 1; i <= periods; i++) {
+                    // Replace placeholders in the URL template with actual values
+                    const url = setTimeTableUrlTemplate
+                                .replace("PLACEHOLDER_DAY", day)
+                                .replace("PLACEHOLDER_PERIOD", `Period ${i}`)
+                                .replace("PLACEHOLDER_CLASS", selectedClass);
+
+                    row += `
+                        <td>
+                            <a href="${url}">
+                                <button type="button">Period ${i}</button>
+                            </a>
+                        </td>
+                    `;
+                }
+                row += '</tr>';
+                tableBody.innerHTML += row;
+            });
+        }
+
+        // Trigger the table update on period or class selection change
+        periodsSelect.addEventListener('change', updateTable);
+        classSelect.addEventListener('change', updateTable);
+
+        // Initialize table on page load
+        updateTable();
+    </script>
 </body>
 </html>

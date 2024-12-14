@@ -47,3 +47,46 @@ footer {
     padding: 20px;
     text-align: center;
 }
+
+:root {
+  --primary-color: #ffe600;
+  --primary-color-dark: #fe4902;
+  --primary-color-darker: #fd0303;
+}
+
+.go-back-button {
+  background-color: var(--primary-color);
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+  margin-top: 20px;
+  position: relative;
+  z-index: 1;
+  display: block;
+  clear: both;
+  text-align: center;
+  margin: 0 auto;
+}
+
+.go-back-button:hover {
+  background-color: var(--primary-color-dark);
+  transform: scale(1.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.go-back-button:active {
+  background-color: var(--primary-color-darker);
+  transform: scale(1.05);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.go-back-button:focus {
+  background-color: var(--primary-color-dark);
+  transform: scale(1.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}

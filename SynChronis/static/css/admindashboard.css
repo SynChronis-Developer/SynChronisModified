@@ -42,6 +42,9 @@ body {
 }
 
 .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     background-color: #555;
     padding: 10px;
     border-radius: 10px 10px 0 0;
@@ -91,4 +94,16 @@ body {
         opacity: 1;
         transform: translateX(0);
     }
+}.btn-group {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.btn-group button {
+    width: 49%;
+    border-radius: 5px;
+    margin: 5px;
+    font-size: 1.2em;
+    padding: 10px 20px;
 }

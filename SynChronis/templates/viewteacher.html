@@ -25,14 +25,13 @@
                 </tr>
             </thead>
         <tbody>
-          {% for i in te %}
-          <tr>
+        {% for i in te %}
+        <tr>
             <td>{{i.id}}</td>
             <td>{{i.Name}}</td>
             <td>{{i.Subject}}</td>
             <td>{{i.Gender}}</td>
             <td>{{i.Department}}</td>
-            {% comment %} <td>{{i.subject}}</td> {% endcomment %}
             <td>{{i.Phone_number}}</td>
             <td>{{i.Email}}</td>
             <td>{{i.Qualification}}</td>
@@ -47,6 +46,11 @@
 
         </tbody>
       </table>
+      <table>
+          <!-- your table code here -->
+      </table>
+      
+      <h3 align="center"><a href="javascript:history.go(-1)" ><button type="button" class="go-back-button">Go Back</button></a></h3>
   </main>
 
   <footer>

@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.views import View
 
-from SynChronisApp.form import LocationForm
+from .form import LocationForm, TimeTableForm
 
 from .models import ClassTable, LoginTable, TeacherTable ,TimeTableTable
 
@@ -57,10 +57,17 @@ class TimeTable(View):
     
 
 class SettimeTable(View):
-    def get(self, request,day,period):
-        print(day,period)
+    def get(self, request,day,period,classname):
+        print(day,period,classname)
         tt=TimeTableTable.objects.all()
-        return render(request, 'settimetable.html',{'tt':tt,'day':day,'period':period})
+        return render(request, 'settimetable.html',{'tt':tt,'day':day,'period':period,'classname':classname,})
+class SettimeTable1(View):
+    def post(self, request,day,period,classname,StartTime,EndTime,SubjectName):
+        print(day,period,classname,StartTime,EndTime,SubjectName)
+        form=TimeTableForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponse('''<script>alert('time table added successfully');window.location.href='/SelectTime_Table';</script>''') 
     
 class MainPage(View):
     def get(self, request):
@@ -82,4 +89,47 @@ class Location(View):
 class SelectTime_Table(View):
     def get(self, request):
         return render(request, 'selecttimetable.html')
+    
+    
+class SendLeaveApplication(View):
+    def get(self, request):
+        return render(request, 'leaveapplication.html')
         
+class Addnotes(View):
+    def get(self, request):
+        return render(request, 'addnotes.html')
+    
+class ViewNotes(View):
+    def get(self, request):
+        return render(request, 'viewnotes.html')
+    
+
+class ApproveLeaveApplication(View):
+    def get(self, request):
+        return render(request, 'viewleaveapplication.html')
+    
+class AdminNotificationControl(View):
+    def get(self, request):
+        return render(request, 'adminnotificationcontrol.html')
+    
+class AddNoticeTeacher(View):
+    def get(self, request):
+        return render(request, 'addnoticeteacher.html')
+    
+class ViewNoticeTeacher(View):
+    def get(self, request):
+        return render(request, 'viewnotice.html')
+    
+
+    
+class AddNoticeStudent(View):
+    def get(self, request):
+        return render(request, 'addnoticestudent.html')
+    
+class ViewNoticeStudent(View):
+    def get(self, request):
+        return render(request, 'viewnotice.html')
+    
+    
+
+    
