@@ -1,0 +1,158 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Attendance</title>
+    <link rel="stylesheet" href="{% static 'css/attendance.css' %}">
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+        .filter-section {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Student Attendance</h2>
+
+    <div class="filter-section">
+        <form method="GET" action="">
+            <label for="student">Select Student:</label>
+            <select name="student" id="student">
+                <option value="">--Select Student--</option>
+                {% for student in students %}
+                    <option value="{{ student.id }}">{{ student.StudentName }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="class">Select Class:</label>
+            <select name="class" id="class">
+                <option value="">--Select Class--</option>
+                {% for class in classes %}
+                    <option value="{{ class.id }}">{{ class.ClassName }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="semester">Select Semester:</label>
+            <select name="semester" id="semester" onchange="toggleMonth(this)">
+                <option value="">--Select Semester--</option>
+                {% for semester in semesters %}
+                    <option value="{{ semester.id }}">{{ semester.Semester }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="month">Select Month:</label>
+            <input type="month" name="month" id="month" onchange="toggleSemester(this)">
+
+            <button type="submit">View Attendance</button>
+        </form>
+    </div>
+
+    <h3>Attendance Records</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Student Name</th>
+                <th>Class</th>
+                <th>Total Hours</th>
+                <th>Attended Hours</th>
+                <th>Attendance (%)</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in attendance %}
+                <tr>
+                    <td>{{ record.Date }}</td>
+                    <td>{{ record.StudentName.StudentName }}</td>
+                    <td>{{ record.StudentName.ClassName.ClassName }}</td>
+                    <td>{{ record.TotalHours }}</td>
+                    <td>{{ record.AttendedHours }}</td>
+                    <td>
+                        {% if record.TotalHours > 0 %}
+                            {{ record.AttendedHours|floatformat:2 }} / {{ record.TotalHours }} 
+                            ({{ record.AttendedHours|divisibleby:record.TotalHours|floatformat:2 }}%)
+                        {% else %}
+                            0%
+                        {% endif %}
+                    </td>
+                    <td>{{ record.Status }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <div>
+        {% if attendance.has_previous %}
+            <a href="?page=1">First</a>
+            <a href="?page={{ attendance.previous_page_number }}">Previous</a>
+        {% endif %}
+        Page {{ attendance.number }} of {{ attendance.paginator.num_pages }}
+        {% if attendance.has_next %}
+            <a href="?page={{ attendance.next_page_number }}">Next</a>
+            <a href="?page={{ attendance.paginator.num_pages }}">Last</a>
+        {% endif %}
+    </div>
+
+    <!-- Button to download PDF for student attendance -->
+    <div>
+        <a href="{% url 'generate_student_pdf' %}">
+            <button>Download Student Attendance PDF</button>
+        </a>
+    </div>
+
+    <!-- Button to download PDF for class-wise results -->
+    <div>
+        <form method="GET" action="{% url 'generate_class_pdf' %}">
+            <label for="class_pdf">Select Class for PDF:</label>
+            <select name="class_pdf" id="class_pdf" onchange="this.form.submit()">
+                <option value="">--Select Class--</option>
+                {% for class in classes %}
+                    <option value="{{ class.id }}">{{ class.ClassName }}</option>
+                {% endfor %}
+            </select>
+        </form>
+    </div>
+
+    <script>
+        function toggleMonth(semesterSelect) {
+            var monthInput = document.getElementById('month');
+            if (semesterSelect.value) {
+                monthInput.disabled = true;
+            } else {
+                monthInput.disabled = false;
+            }
+        }
+
+        function toggleSemester(monthInput) {
+            var semesterSelect = document.getElementById('semester');
+            if (monthInput.value) {
+                semesterSelect.disabled = true;
+            } else {
+                semesterSelect.disabled = false;
+            }
+        }
+
+        // Initialize the state based on current values
+        document.addEventListener('DOMContentLoaded', function() {
+            toggleMonth(document.getElementById('semester'));
+            toggleSemester(document.getElementById('month'));
+        });
+    </script>
+
+</body>
+</html>

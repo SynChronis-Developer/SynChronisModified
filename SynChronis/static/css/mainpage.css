@@ -1,53 +1,45 @@
-/* Set the theme to black, gold, and white */
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
+/* Specific styles for main page */
+#mainpage {
+    background: #f0f8ff !important; /* Background color for main page */
 }
 
-/* Create a container for the welcome page */
-.welcome-page {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    background-image: linear-gradient(45deg, #000 50%, #faf9f3 50%, #fff 100%);
-    overflow: hidden;
+.mainpage-container {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: 100vh !important;
+    overflow: hidden !important;
 }
 
-/* Style the welcome text */
-.welcome-text {
-    font-size: 48px;
-    font-weight: bold;
-    color: #ffd700; /* gold */
-    animation: fadeIn 2s ease-in-out, scaleUp 2s ease-in-out;
+.mainpage-container .welcome-text {
+    font-size: 98px !important;
+    font-weight: bold !important;
+    animation: fadeIn 2s ease-in-out, scaleUp 2s ease-in-out !important;
 }
 
-/* Style the login button */
-.login-button {
-    margin-top: 20px;
-    background-color: #ffd700; /* gold */
-    color: #fff; /* white */
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    animation: pulse 2s ease-in-out infinite;
+.mainpage-container .login-button {
+    margin-top: 20px !important;
+    background-color: #3c4e6a !important;
+    color: #ffffff !important;
+    padding: 12px 25px !important;
+    border: none !important;
+    border-radius: 5px !important;
+    cursor: pointer !important;
+    font-size: 18px !important;
+    animation: pulse 2s ease-in-out infinite !important;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2) !important;
 }
 
-/* Add intro and outro transitions to the login link */
-.login-button:hover {
-    animation: pulse 0.5s ease-in-out infinite, scaleUp 0.5s ease-in-out;
-    background-color: #fff; /* white */
-    color: #ffd700; /* gold */
+.mainpage-container .login-button:hover {
+    background-color: #4a6d8d !important;
 }
 
-/* Add some basic animations */
 @keyframes fadeIn {
     0% {
         opacity: 0;
     }
+
     100% {
         opacity: 1;
     }
@@ -57,8 +49,9 @@ body {
     0% {
         transform: scale(0.5);
     }
+
     100% {
-        transform: scale(1);
+        transform: scale(1.2);
     }
 }
 
@@ -66,10 +59,44 @@ body {
     0% {
         transform: scale(1);
     }
+
     50% {
-        transform: scale(1.1);
+        transform: scale(1.2);
     }
+
     100% {
         transform: scale(1);
     }
+}
+
+/* Specific dark mode styles */
+body.dark #mainpage {
+    background: #2e2a47 !important;
+}
+
+body.dark .mainpage-container .welcome-text {
+    color: #ffd700 !important; /* Gold color for dark mode */
+}
+
+body.dark .mainpage-container .login-button {
+    background-color: #2b2b2b !important;
+    color: #ffd700 !important;
+}
+
+body.dark .mainpage-container .login-button:hover {
+    background-color: #ffd700 !important;
+    color: #2e2a47 !important;
+}
+
+/* Specific theme toggle button styles */
+body.dark .theme-toggle-btn {
+    background-color: transparent !important;
+    color: #f6fc48 !important;
+    border: 2px solid #e2f94a !important;
+}
+
+body.dark .theme-toggle-btn:hover {
+    background-color: #f6f340f1 !important;
+    color: #2e2a47 !important;
+    border-color: #ffd1dc !important;
 }

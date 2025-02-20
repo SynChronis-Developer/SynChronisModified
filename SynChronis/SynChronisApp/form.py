@@ -1,32 +1,38 @@
+from django import forms
 from django.forms import ModelForm
 
-from SynChronisApp.models import AttendanceTable, ClassTable, LeaveApplicationTable, LocationTable, LoginTable, NotesTable, StudentNoticeTable, StudentTable, SubjectTable, TeacherNoticeTable, TeacherTable, TimeTableTable
+from SynChronisApp.models import *
 
 
 class LocationForm(ModelForm):
     class Meta:
         model = LocationTable
-        fields = ['Location_name', 'latitude', 'longitude']
+        fields = ['location_name', 'polygon_coordinates']
         
-class TimeTableForm(ModelForm):
+class TimetableEntryForm(forms.ModelForm):
     class Meta:
         model = TimeTableTable
-        fields = ['Class_name', 'Period', 'SubjectName', 'TeacherName', 'Day', 'StartTime', 'EndTime', ]
+        fields = ['SubjectName', 'TeacherName', 'ClassName', 'day', 'period', 'start_time', 'end_time']
+        widgets = {
+            'start_time': forms.TimeInput(attrs={'type': 'time'}),
+            'end_time': forms.TimeInput(attrs={'type': 'time'}),
+        }
+
         
 class ClassForm(ModelForm):
     class Meta:
         model = ClassTable
-        fields = ['Class_name', 'TeacherName', 'Latitude', 'Longitude', 'Location_name', 'Department', 'Year', 'Semester']
+        fields = ['ClassName', 'TeacherName', 'Latitude', 'Longitude', 'Location_name', 'Semester']
         
 class TeacherForm(ModelForm):
     class Meta:
         model = TeacherTable
-        fields = ['TeacherName', 'Gender', 'Subject','Department','Qualification','Email', 'Phone_number',]
+        fields = ['TeacherName', 'Gender', 'SubjectName','Qualification','Email', 'Phone_number']
         
-class SubjectForm(ModelForm):
+class SubjectsForm(ModelForm):
     class Meta:
-        model = SubjectTable
-        fields = ['SubjectName', 'TeacherName', 'Course', 'Semester','Year_of_Syllabus']
+        model = SubjectsTable
+        fields = ['SubjectName','Semester','Year_of_Syllabus']
         
 class NotesForm(ModelForm):
     class Meta:
@@ -41,21 +47,50 @@ class LoginForm(ModelForm):
 class StudentForm(ModelForm):
     class Meta:
         model = StudentTable
-        fields = ['StudentName', 'Gender', 'Admission_no','Department','Guardian_relation','Course','Address','Year','Semester','Age','Email', 'Phone_number','Class_name','Guardian_name','Guardian_phone','Date_of_birth','Blood_group']
+        fields = ['StudentName', 'Gender', 'Admission_no','Guardian_relation','Address','BatchYear','Semester','Age','Email', 'Phone_number','ClassName','Guardian_name','Guardian_phone','Date_of_birth','Blood_group']
         
-class StudentNotificationForm(ModelForm):
+class StudentNoticeForm(forms.ModelForm):
     class Meta:
         model = StudentNoticeTable
-        fields =['StudentName', 'Notice_Content', 'Notice_name', 'File_Attachment']
-        
+        fields = ['Notice_name', 'Notice_Content', 'File_Attachment']
+
+
+    
 class TeacherNotificationForm(ModelForm):
     class Meta:
         model = TeacherNoticeTable
-        fields =['TeacherName', 'Notice_Content', 'Notice_name',  'File_Attachment']
-        
+        fields =[ 'NoticeContent', 'NoticeName',  'FileAttachment']
 
 class LeaveApplicationForm(ModelForm):
     class Meta:
         model = LeaveApplicationTable
         fields = ['StudentName', 'Date', 'Reason', 'Status']
         
+
+
+    # Add placeholders or initial labels for fields
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['ClassName'].queryset = ClassTable.objects.all()
+
+class CollegeDetailsForm(forms.ModelForm):
+    class Meta:
+        model = CollegeDetailsTable
+        fields = ['name', 'email', 'phone_number', 'principal_name', 'principal_contact']
+        
+class CourseForm(forms.ModelForm):
+    class Meta:
+        model = CourseTable
+        fields = ['CourseName', 'Department', 'CourseDuration', 'CourseDescription', 'CourseCode']
+
+
+class DepartmentForm(ModelForm):
+    class Meta:
+        model = DepartmentsTable
+        fields = ['Department', 'department_id',]  # Assuming you have a related field for CollegeDetails
+
+
+class SubjectForm(forms.ModelForm):
+    class Meta:
+        model = SubjectsTable
+        fields = ['SubjectName', 'Semester', 'Year_of_Syllabus', 'Subject_code', 'Department']

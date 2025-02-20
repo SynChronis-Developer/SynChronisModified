@@ -1,0 +1,281 @@
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Details</title>
+    <link rel="stylesheet" href="{% static 'css/collegedetails.css' %}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+</head>
+<body>
+     <!-- Theme Toggle Button -->
+<button id="theme-toggle-btn" class="theme-toggle-btn">
+    <i class="fa fa-sun"></i> <!-- Default icon (sun for light theme) -->
+</button>
+<div class="page" id="page">
+<div >
+    <div id="college-details" class="college-details">
+    <h2>College Details</h2>
+
+
+    {% if college_details %}
+    <h4>Current College Details</h4>
+    <p><strong>Name:</strong> <span id="college-name">{{ college_details.name }}</span></p>
+    <p><strong>Email:</strong> <span id="college-email">{{ college_details.email }}</span></p>
+    <p><strong>Phone:</strong> <span id="college-phone">{{ college_details.phone_number }}</span></p>
+    <p><strong>Principal Name:</strong> <span id="college-principal">{{ college_details.principal_name }}</span></p>
+    <p><strong>Principal Contact:</strong> <span id="college-principal-contact">{{ college_details.principal_contact }}</span></p>
+    
+    <button id="delete-college-details" data-id="{{ college_details.id }}" onclick="return confirm('Are you sure you want to delete these details?')">Delete College Details</button>
+    {% endif %}
+
+    {% if college_details %}
+        <h3>Update College Details</h3>
+    {% else %}
+        <h3>Add College Details</h3>
+        <form id="college-details-form" method="post" action="">
+            {% csrf_token %}
+            <label for="id_name">College Name:</label>
+            <input type="text" name="name" id="id_name" value="{{ form.name.value }}" required><br>
+        
+            <label for="id_email">Email:</label>
+            <input type="email" name="email" id="id_email" value="{{ form.email.value }}" required><br>
+        
+            <label for="id_phone_number">Phone Number:</label>
+            <input type="text" name="phone_number" id="id_phone_number" value="{{ form.phone_number.value }}" required><br>
+        
+            <label for="id_principal_name">Principal Name:</label>
+            <input type="text" name="principal_name" id="id_principal_name" value="{{ form.principal_name.value }}" required><br>
+        
+            <label for="id_principal_contact">Principal Contact:</label>
+            <input type="text" name="principal_contact" id="id_principal_contact" value="{{ form.principal_contact.value }}" required><br>
+        
+            <button type="submit" id="submit-btn">
+                {% if college_details %} Update {% else %} Add {% endif %}
+            </button>
+        </form>
+    {% endif %}
+
+    <form id="college-details-form-update" method="post" action="">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" id="submit-btn-update">
+            {% if college_details %} Update {% else %} Add {% endif %}
+        </button>
+    </form>
+
+</div>
+</div>
+    <h2>Departments Management</h2>
+    <form id="department-form" method="get" >
+        <table id="departments-list">
+            <thead>
+                <tr>
+                    <th>Department ID</th>
+                    <th>Department Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for department in departments %}
+                <tr>
+                    <td>{{ department.department_id }}</td>
+                    <td>{{ department.Department }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </form>
+    <a href="{% url 'manage_departments' %}">
+        <button>Manage Departments</button>
+    </a>
+
+<h2>Course Management</h2>
+<form id="course-form" method="get" >
+    <table id="courses-list">
+        <thead>
+            <tr>
+                <th>Course Name</th>
+                <th>Department</th>
+                <th>Duration</th>
+                <th>Code</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for course in courses %}
+            <tr>
+                <td>{{ course.CourseName }}</td>
+                <td>{{ course.Department.Department }}</td>
+                <td>{{ course.CourseDuration }}</td>
+                <td>{{ course.CourseCode }}</td>
+                <td>{{ course.CourseDescription }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</form>
+<a href="{% url 'manage_courses' %}">
+    <button>Manage Courses</button>
+</a>
+
+<h2>Subjects Management</h2>
+<form id="subject-form" method="get" >
+    <table id="subjects-list">
+        <thead>
+            <tr>
+                <th>Subject Code</th>
+                <th>Subject Name</th>
+                <th>Department</th>
+                <th>Year of Syllabus</th>
+                <th>Semester</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for subject in subjects %}
+            <tr>
+                <td>{{ subject.Subject_code }}</td>
+                <td>{{ subject.SubjectName }}</td>
+                <td>{{ subject.Department.Department }}</td>
+                <td>{{ subject.Year_of_Syllabus }}</td>
+                <td>{{ subject.Semester.Semester }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</form>
+<button id="manage-subjects-btn">Manage Subjects</button>
+<h2>Classes<h2>
+    <form id="class-form" method="get" >
+        <table>
+            <thead>
+                <tr>
+                    <th>Class Name</th>
+                    <th>Department</th>
+                    <th>Teacher</th>
+                    <th>Semester</th>
+                </tr>
+            </thead>
+            <tbody id="classTableBody">
+                {% for class in classes %}
+                <tr>
+                    <td>{{ class.ClassName }}</td>
+                    <td>{{ class.Department.Department }}</td>
+                    <td>{{ class.TeacherName.TeacherName }}</td>
+                    <td>{{ class.Semester.Semester }}</td>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </form>
+    <button onclick="window.location.href='/manage-class/'" class="btn btn-primary">
+        Go to Class Management
+    </button>
+</div>
+
+    
+<script src="{% static 'js/theme-switcher.js' %}"></script>
+<script>
+    $('#manage-subjects-btn').on('click', function(event) {
+        event.preventDefault();  // Prevent form submission or default behavior
+        window.location.href = '{% url "manage_subjects" %}';
+    });
+</script>
+
+    
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+      // Get the "Go to Home" button
+      const goHomeButton = document.getElementById('go-home-btn');
+      
+      // Add event listener for click event
+      goHomeButton.addEventListener('click', function() {
+        // Redirect to the home page (You can change the URL if needed)
+        window.history.back(); // "/" is the root URL (Home page)
+      });
+    });
+
+    <script>
+        // AJAX for adding and updating college details
+        $('#college-details-form').on('submit', function(e) {
+            e.preventDefault(); // Prevent default form submission
+
+            const form = $(this);
+            const url = form.attr('action') || '{% url "college_details" %}';
+            const method = form.find('#submit-btn').text().toLowerCase() === 'add' ? 'POST' : 'POST'; // Both Add and Update use POST
+
+            const requestUrl = '{% url "update_college_details" %}';  // Correct URL for updating
+
+            $.ajax({
+                url: requestUrl,
+                method: method,
+                data: form.serialize(), // Serialize form data
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}' // Pass the CSRF token in headers
+                },
+                success: function(response) {
+                    if (response.success) {
+                        alert(response.message);
+                        if (response.action === 'add') {
+                            // Update the page with new details
+                            $('#college-name').text(response.college.name);
+                            $('#college-email').text(response.college.email);
+                            $('#college-phone').text(response.college.phone_number);
+                            $('#college-principal').text(response.college.principal_name);
+                            $('#college-principal-contact').text(response.college.principal_contact);
+                            // Change the form to "Update" mode after successful addition
+                            $('#submit-btn').text('Update');
+                        } else if (response.action === 'update') {
+                            // College updated successfully (page should already be updated)
+                            alert('College details updated successfully!');
+                            // Update the page with the new values
+                            $('#college-name').text(response.college.name);
+                            $('#college-email').text(response.college.email);
+                            $('#college-phone').text(response.college.phone_number);
+                            $('#college-principal').text(response.college.principal_name);
+                            $('#college-principal-contact').text(response.college.principal_contact);
+                        }
+                    } else {
+                        alert('Error: ' + response.message);
+                    }
+                },
+                error: function(error) {
+                    console.log('Error:', error);
+                    alert('An error occurred while processing your request.');
+                }
+            });
+        });
+    </script>
+
+    <!-- AJAX for deleting college details -->
+    <script>
+        $('#delete-college-details').on('click', function() {
+            const collegeId = $(this).data('id');
+
+            $.ajax({
+                url: '{% url "delete_college_details" %}',  // Correct URL
+                method: 'POST',
+                data: {
+                    'csrfmiddlewaretoken': '{{ csrf_token }}',
+                    'id': collegeId
+                },
+                success: function(response) {
+                    if (response.success) {
+                        alert(response.message);
+                        location.reload(); // Reload the page to show the updated state
+                    } else {
+                        alert('Error: ' + response.message);
+                    }
+                },
+                error: function(error) {
+                    console.log('Error:', error);
+                    alert('An error occurred while deleting college details.');
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

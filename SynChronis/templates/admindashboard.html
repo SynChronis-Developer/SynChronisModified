@@ -1,71 +1,201 @@
+
 {% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="{% static 'css/admindashboard.css' %}">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/global.css' %}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
-<body>
-    <div class="header">
-        <h1 class="gold-text">Admin Dashboard</h1>
-    </div>
+<body class="admindashboard">
+    <!-- Theme Toggle Button -->
+<button id="theme-toggle-btn" class="theme-toggle-btn">
+    <i class="fa fa-sun"></i> <!-- Default icon (sun for light theme) -->
+</button>
 
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="gold-text">Teacher</h2>
-                    </div>
-                    <div class="card-body">
-                        <a href="/View_Teacher"><button type="button" class="btn btn-gold">View Teacher</button></a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="gold-text">Time Table</h2>
-                    </div>
-                    <div class="card-body">
-                        <a href="/Time_Table"><button type="button" class="btn btn-gold">View Time Table</button></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="gold-text">Location</h2>
-                    </div>
-                    <div class="card-body">
-                        <a href="/Location"><button type="button" class="btn btn-gold">View Location</button></a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="gold-text">Attendance</h2>
-                    </div>
-                    <div class="card-body">
-                        <button type="button" class="btn btn-gold">View Attendance</button>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-              <div class="card">
-                <div class="card-header">
-                  <h2 class="gold-text" align="center">Notifications</h2>
-                </div>
-                <div class="card-body">
-                    <a href="/Admin_Notification_Control"><button type="button" class="btn btn-gold" align="center">Edit Notifications</button></a>
-                </div>
-              </div>
-            </div>
-        </div>
+
+    
+
+<div class="admindashboard-header">
+    <!-- Logo Container -->
+    <div id="mainpage-logo-container" class="logo-container">
+        <img 
+            src="{% static 'logo/images/S_Logo.png' %}" 
+            alt="Logo" 
+            id="mainpage-animated-logo"
+            class="animated-logo">
+        <h1 class="admindashboard-gold-text">Admin Dashboard</h1>
     </div>
+    
+    
+
+<!-- Theme-specific styles -->
+<style>
+    /* Logo Container */
+    #mainpage-logo-container {
+        display: flex;
+        align-items: center;
+        gap: 15px; /* Space between logo and text */
+        animation: logo-slide-in 1.2s ease-out forwards; /* Slide-in effect */
+    }
+
+    #mainpage-animated-logo {
+        width: 70px;
+        height: 70px;
+        animation: bounce 2s infinite ease-in-out; /* Continuous bounce */
+        transform-origin: center; /* Anchor point for animations */
+        filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25)); /* Shadow */
+        transition: transform 0.3s ease-in-out; /* Smooth transform on hover */
+    }
+
+    #mainpage-logo-container:hover #mainpage-animated-logo {
+        transform: scale(1.1); /* Slight scale-up on hover */
+    }
+
+    /* Dark mode adjustments */
+    body.admindashboard.dark #mainpage-animated-logo {
+        filter: drop-shadow(0px 4px 6px rgba(255, 255, 255, 0.3));
+    }
+
+    /* Slide-in Animation */
+    @keyframes logo-slide-in {
+        0% {
+            opacity: 0;
+            transform: translateX(-50px); /* Start off-screen to the left */
+        }
+        100% {
+            opacity: 1;
+            transform: translateX(0); /* End at original position */
+        }
+    }
+
+    /* Bounce Animation */
+    @keyframes bounce {
+        0%, 100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-10px); /* Bounce upward */
+        }
+    }
+</style>
+
+
+
+    <div class="admindashboard-container">
+        <!-- Teacher Section -->
+        <div class="admindashboard-row">
+            <div class="admindashboard-col">
+                <div class="admindashboard-card">
+                    <div class="admindashboard-card-header">
+                        <h2 class="admindashboard-gold-text">Teacher</h2>
+                    </div>
+                    <div class="admindashboard-card-body">
+                        <a href="/View_Teacher"><button type="button" class="admindashboard-btn btn-gold">View Teacher</button></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Time Table Section -->
+            <div class="admindashboard-col">
+                <div class="admindashboard-card">
+                    <div class="admindashboard-card-header">
+                        <h2 class="admindashboard-gold-text">Time Table</h2>
+                    </div>
+                    <div class="admindashboard-card-body">
+                        <a href="/timetable"><button type="button" class="admindashboard-btn btn-gold">View Time Table</button></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Location and Attendance Section -->
+        <div class="admindashboard-row">
+            <div class="admindashboard-col">
+                <div class="admindashboard-card">
+                    <div class="admindashboard-card-header">
+                        <h2 class="admindashboard-gold-text">Location</h2>
+                    </div>
+                    <div class="admindashboard-card-body">
+                        <a href="/Location"><button type="button" class="admindashboard-btn btn-gold">View Location</button></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="admindashboard-col">
+                <div class="admindashboard-card">
+                    <div class="admindashboard-card-header">
+                        <h2 class="admindashboard-gold-text">Attendance</h2>
+                    </div>
+                    <div class="admindashboard-card-body">
+                        <a href="/attendanceview"><button type="button" class="admindashboard-btn btn-gold">View Attendance</button></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Manage Batch and Semester Section -->
+        <div class="admindashboard-card">
+            <div class="admindashboard-header">
+                <h2 class="admindashboard-gold-text">Manage Batch and Semester</h2>
+                {% comment %} <div class="admindashboard-row">
+                    <div class="admindashboard-col"> {% endcomment %}
+                       
+            </div>
+        </div>
+{% comment %} 
+                    <div class="admindashboard-col">
+                        <div class="admindashboard-card"> {% endcomment %}
+                            <div class="admindashboard-card-header">
+                                <h2 class="admindashboard-gold-text">Semester Settings</h2>
+                            </div>
+                            <div class="admindashboard-card-body">
+                                <a href="/manage_semesters"><button type="button" class="admindashboard-btn btn-gold">Manage Semester</button></a>
+                            </div>
+                        {% comment %} </div>
+                    </div> {% endcomment %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Notifications Section and College details -->
+
+        <div class="admindashboard-row">
+            <div class="admindashboard-col">
+                <div class="admindashboard-card">
+                    <div class="admindashboard-card-header">
+                        <h2 class="admindashboard-gold-text">About College</h2>
+                    </div>
+                    <div class="admindashboard-card-body">
+                        <a href="/college_details"><button type="button" class="admindashboard-btn btn-gold">College Details</button></a>
+                    </div>
+                </div>
+            </div>
+
+
+        
+            <div class="admindashboard-col">
+                <div class="admindashboard-card">
+                    <div class="admindashboard-card-header">
+                        <h2 class="admindashboard-gold-text" >Notifications</h2>
+                    </div>
+                    <div class="admindashboard-card-body">
+                        <a href="/Admin_Notification_Control"><button type="button" class="admindashboard-btn btn-gold" >Edit Notifications</button></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <!-- Logout Button -->
+    <button id="admindashboard-logout" class="logout-button" align="center">Logout</button>
+    </div>
+    <!-- JavaScript for Theme Toggle and Logout Button -->
+    <script src="{% static 'js/theme-switcher.js' %}"></script>
+    <script>
+        // Logout Button Functionality
+        document.getElementById('admindashboard-logout').addEventListener('click', function() {
+            window.history.back(); // Go back to the previous page
+        });
+    </script>
 </body>
 </html>

@@ -5,98 +5,352 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Timetable Manager</title>
-    <link rel="stylesheet" href="{% static 'css/timetable.css' %}">
+    <link rel="stylesheet" href="{% static 'css/timetablepage.css' %}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
-<body>
-    <form>
-        <h1 class="header">SET TIME-TABLE<h1>
-        <label for="select">Select Class</label>
-        <select id="select" ,name ="classname">
-            {% for i in tt %}
-            <option value="{{ i.Class_name.Class_name }}">{{ i.Class_name.Class_name }}</option>
-            {% endfor %}
-        </select>
+<body id="timetablepage">
 
-        <label for="periods">Select Number of Periods</label>
-        <select id="periods">
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5" selected>5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
-            <option value="10">10</option>
-        </select>
-    </form>
+    <!-- Theme Toggle Button -->
+    <div id="theme-toggle-container" class="theme-toggle-container">
+        <button id="theme-toggle-btn" class="theme-toggle-btn">
+            <i class="fa fa-sun"></i> <!-- Default icon (sun for light theme) -->
+        </button>
+    </div>
 
-    <div class="container">
-        <div class="table-container center">
-            <table class="table" id="timetable">
+    <!-- Main Timetable Page Container -->
+    <div id="timetablepage-container" class="timetablepage-container">
+        
+        <!-- Timetable Setup Form -->
+        <div id="set-timetable-container" class="set-timetable-container">
+            <form method="POST" id="set-timetable-form">
+                {% csrf_token %}
+                <h1 id="timetablepage-header" class="header">SET TIME-TABLE</h1>
+
+                <!-- Class Select Dropdown -->
+                <div class="form-group">
+                    <label for="select">Select Class</label>
+                    <select id="select" name="classname" class="form-select">
+                        {% for class in classes %}
+                        <option value="{{ class.id }}">{{ class.ClassName }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Periods Select Dropdown -->
+                <div class="form-group">
+                    <label for="periods">Select Number of Periods</label>
+                    <select id="periods" name="num_periods" class="form-select">
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5" selected>5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                    </select>
+                </div>
+
+                <!-- Timetable Table -->
+                <div id="timetablepage-table-container" class="table-container">
+                    <h2>Set Timetable</h2>
+                    <table class="table-set-tt" id="timetable">
+                        <thead>
+                            <tr id="header-row">
+                                <th>Day</th> <!-- Fixed 'Day' column -->
+                            </tr>
+                        </thead>
+                        <tbody id="table-body">
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" id="submit-btn" class="submit-btn">Submit</button>
+                <!-- Update Button -->
+                <button type="button" id="update-btn" class="submit-btn" style="display: none;">Update</button>
+            </form>
+            
+        </div>
+        
+        <!-- View Timetable Table -->
+        <div id="view-timetable-container" class="view-timetable-container">
+            <h2>View Timetable</h2>
+            <table class="table-view-tt" id="view-timetable">
                 <thead>
-                    <tr id="header-row">
-                        <th>Day</th>
+                    <tr id="view-header-row">
+                        <th>Day</th> <!-- Fixed 'Day' column -->
                     </tr>
                 </thead>
-                <tbody id="table-body">
+                <tbody id="view-table-body">
                 </tbody>
             </table>
         </div>
+
+    </div> <!-- End of Timetable Page Container -->
+
+    <!-- Go Back Button -->
+    <div id="go-back-container" class="go-back-container">
+        <button id="go-back-btn">
+            <i class="fa fa-home"></i> Go To HomePage
+        </button>
     </div>
 
+    <!-- Scripts -->
+    <script src="{% static 'js/theme-switcher.js' %}"></script>
     <script>
-        const periodsSelect = document.getElementById('periods');
-        const classSelect = document.getElementById('select');
-        const tableHead = document.getElementById('header-row');
-        const tableBody = document.getElementById('table-body');
+    const periodsSelect = document.getElementById('periods');
+    const classSelect = document.getElementById('select');
+    const tableHead = document.getElementById('header-row');
+    const tableBody = document.getElementById('table-body');
+    const viewTableBody = document.getElementById('view-table-body');
+    const form = document.getElementById('set-timetable-form');
+    const submitBtn = document.getElementById('submit-btn');
+    const updateBtn = document.getElementById('update-btn');
 
-        const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-        // Pass the base URL for the timetable page from Django template to JavaScript
-        const setTimeTableUrlTemplate = "{% url 'set_time_table' day='PLACEHOLDER_DAY' period='PLACEHOLDER_PERIOD' classname='PLACEHOLDER_CLASS' %}";
+    // Function to update both tables based on selected class and periods
+    function updateTables() {
+        const selectedClass = classSelect.value;
+        const numPeriods = periodsSelect.value;
 
-        // Function to update the timetable table
-        function updateTable() {
-            const periods = parseInt(periodsSelect.value);
-            const selectedClass = classSelect.value;  // Get the selected class
+        // Clear previous content
+        tableHead.innerHTML = '<th>Day</th>';
+        tableBody.innerHTML = '';
+        viewTableBody.innerHTML = '';
 
-            // Update the table header
-            tableHead.innerHTML = '<th>Day</th>';
-            for (let i = 1; i <= periods; i++) {
-                tableHead.innerHTML += `<th>Period ${i}</th>`;
-            }
-
-            // Update table body
-            tableBody.innerHTML = '';
-            weekdays.forEach(day => {
-                let row = `<tr><td>${day}</td>`;
-                for (let i = 1; i <= periods; i++) {
-                    // Replace placeholders in the URL template with actual values
-                    const url = setTimeTableUrlTemplate
-                                .replace("PLACEHOLDER_DAY", day)
-                                .replace("PLACEHOLDER_PERIOD", `Period ${i}`)
-                                .replace("PLACEHOLDER_CLASS", selectedClass);
-
-                    row += `
-                        <td>
-                            <a href="${url}">
-                                <button type="button">Period ${i}</button>
-                            </a>
-                        </td>
-                    `;
-                }
-                row += '</tr>';
-                tableBody.innerHTML += row;
-            });
+        // Add period columns (e.g., Period 1, Period 2, ...)
+        for (let period = 1; period <= numPeriods; period++) {
+            let periodHeaderCell = document.createElement('th');
+            periodHeaderCell.textContent = `Period ${period}`;
+            tableHead.appendChild(periodHeaderCell);
         }
 
-        // Trigger the table update on period or class selection change
-        periodsSelect.addEventListener('change', updateTable);
-        classSelect.addEventListener('change', updateTable);
+        // Loop through days of the week
+        weekdays.forEach(day => {
+            let row = document.createElement('tr');
+            let dayCell = document.createElement('td');
+            dayCell.textContent = day;
+            row.appendChild(dayCell);
 
-        // Initialize table on page load
-        updateTable();
+            for (let period = 1; period <= numPeriods; period++) {
+                let cell = document.createElement('td');
+                cell.innerHTML = ` 
+                    <select name="subject-${day}-${period}" class="subject-select" required>
+                        <option value="" disabled selected>Select Subject</option>
+                        {% for subject in subjects %}
+                        <option value="{{ subject.id }}">{{ subject.SubjectName }}</option>
+                        {% endfor %}
+                    </select>
+                    <select name="teacher-${day}-${period}" class="teacher-select">
+                        <option value="">Select Teacher</option>
+                        {% for teacher in teachers %}
+                        <option value="{{ teacher.id }}">{{ teacher.TeacherName }}</option>
+                        {% endfor %}
+                    </select>
+                    <input type="time" name="StartTime-${day}-${period}" class="time-input" />
+                    <input type="time" name="EndTime-${day}-${period}" class="time-input" />
+                `;
+                row.appendChild(cell);
+            }
+            tableBody.appendChild(row);
+        });
+
+        // Load existing timetable data for the selected class
+        loadTimetable();
+    }
+
+    // Function to load and display the timetable for the selected class
+    function loadTimetable() {
+        const selectedClass = classSelect.value;
+        fetch(`/timetable/view/${selectedClass}/`)
+            .then(response => response.json())
+            .then(data => {
+                viewTableBody.innerHTML = '';
+                let hasData = false;
+                weekdays.forEach(day => {
+                    let row = document.createElement('tr');
+                    let dayCell = document.createElement('td');
+                    dayCell.textContent = day;
+                    row.appendChild(dayCell);
+
+                    for (let period = 1; period <= periodsSelect.value; period++) {
+                        let cell = document.createElement('td');
+                        const periodData = data[day] ? data[day][period] : null;
+                        if (periodData) {
+                            hasData = true;
+                            cell.innerHTML = `
+                                ${periodData.subjectName}<br>
+                                ${periodData.teacherName}<br>
+                                ${periodData.startTime} - ${periodData.endTime}
+                            `;
+                            // Populate the add timetable form with existing data
+                            const subjectSelect = document.querySelector(`select[name="subject-${day}-${period}"]`);
+                            const teacherSelect = document.querySelector(`select[name="teacher-${day}-${period}"]`);
+                            const startTimeInput = document.querySelector(`input[name="StartTime-${day}-${period}"]`);
+                            const endTimeInput = document.querySelector(`input[name="EndTime-${day}-${period}"]`);
+
+                            if (subjectSelect) subjectSelect.value = periodData.subjectName;
+                            if (teacherSelect) teacherSelect.value = periodData.teacherName;
+                            if (startTimeInput) startTimeInput.value = periodData.startTime;
+                            if (endTimeInput) endTimeInput.value = periodData.endTime;
+                        } else {
+                            cell.innerHTML = 'No entry';
+                        }
+                        row.appendChild(cell);
+                    }
+                    viewTableBody.appendChild(row);
+                });
+                if (hasData) {
+                    submitBtn.style.display = 'none';
+                    updateBtn.style.display = 'block';
+                } else {
+                    submitBtn.style.display = 'block';
+                    updateBtn.style.display = 'none';
+                }
+            })
+            .catch(error => console.error('Error loading timetable:', error));
+    }
+
+    // Validate form submission
+    form.addEventListener('submit', function (event) {
+        const subjectSelects = document.querySelectorAll('.subject-select');
+        let valid = true;
+
+        subjectSelects.forEach(select => {
+            if (select.value === '') {
+                valid = false;
+                select.style.border = '2px solid red';  // Highlight empty subjects
+            } else {
+                select.style.border = ''; // Reset border if valid
+            }
+        });
+
+        if (!valid) {
+            alert('Please select a subject for each period before submitting.');
+            event.preventDefault(); // Prevent form submission if subject is missing
+        }
+    });
+
+    // Event listeners for changes in class or periods
+    classSelect.addEventListener('change', () => {
+        updateTables();
+        loadTimetable();
+    });
+    periodsSelect.addEventListener('change', updateTables);
+
+    // Initial call to populate tables when page loads
+    updateTables();
+    loadTimetable();
+
+    document.getElementById('set-timetable-form').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent default form submission
+
+        const selectedClass = document.getElementById('select').value;
+        const numPeriods = document.getElementById('periods').value;
+        const timetableData = [];
+
+        document.querySelectorAll('#table-body tr').forEach(row => {
+            const day = row.cells[0].textContent; // Get the day name
+            for (let i = 1; i <= numPeriods; i++) {
+                const selectSubject = row.cells[i].querySelector('.subject-select');
+                const selectTeacher = row.cells[i].querySelector('.teacher-select');
+                const startTimeInput = row.cells[i].querySelector('[name^="StartTime"]');
+                const endTimeInput = row.cells[i].querySelector('[name^="EndTime"]');
+
+                // Check if subject is selected
+                if (selectSubject.value) {
+                    timetableData.push({
+                        day: day,
+                        period: i,
+                        subject: selectSubject.value,
+                        teacher: selectTeacher.value,
+                        start_time: startTimeInput.value,
+                        end_time: endTimeInput.value
+                    });
+                }
+            }
+        });
+
+        // Send data to Django via AJAX
+        fetch('/timetable/set/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'  // Ensure CSRF token is included
+            },
+            body: JSON.stringify({
+                classname: selectedClass,
+                periods: numPeriods,
+                timetable: timetableData
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Timetable saved successfully!');
+                location.reload(); // Refresh page to reflect changes
+            } else {
+                alert('Error saving timetable: ' + data.error);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+
+    // Update button event listener
+    updateBtn.addEventListener('click', function() {
+        const selectedClass = document.getElementById('select').value;
+        const numPeriods = document.getElementById('periods').value;
+        const timetableData = [];
+
+        document.querySelectorAll('#table-body tr').forEach(row => {
+            const day = row.cells[0].textContent; // Get the day name
+            for (let i = 1; i <= numPeriods; i++) {
+                const selectSubject = row.cells[i].querySelector('.subject-select');
+                const selectTeacher = row.cells[i].querySelector('.teacher-select');
+                const startTimeInput = row.cells[i].querySelector('[name^="StartTime"]');
+                const endTimeInput = row.cells[i].querySelector('[name^="EndTime"]');
+
+                // Check if subject is selected
+                if (selectSubject.value) {
+                    timetableData.push({
+                        day: day,
+                        period: i,
+                        subject: selectSubject.value,
+                        teacher: selectTeacher.value,
+                        start_time: startTimeInput.value,
+                        end_time: endTimeInput.value
+                    });
+                }
+            }
+        });
+
+        // Send data to Django via AJAX
+        fetch('/timetable/set/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'  // Ensure CSRF token is included
+            },
+            body: JSON.stringify({
+                classname: selectedClass,
+                periods: numPeriods,
+                timetable: timetableData
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Timetable updated successfully!');
+                location.reload(); // Refresh page to reflect changes
+            } else {
+                alert('Error updating timetable: ' + data.error);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
     </script>
 </body>
 </html>
